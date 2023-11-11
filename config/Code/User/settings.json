@@ -1,0 +1,13 @@
+{
+    "editor.fontFamily": "'Monaspace Neon', monospace",
+    "editor.fontLigatures": true,
+
+    "workbench.startupEditor": "none",
+    "blender.executables": [
+        {
+            "path": "/usr/bin/blender-wrapped",
+            "name": "",
+            "isDebug": false
+        }
+    ],
+}

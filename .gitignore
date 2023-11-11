@@ -1,0 +1,14 @@
+config/blender/3.6/config/*
+!config/blender/3.6/config/userpref.blend
+
+config/blender/3.6/scripts/addons/*
+!config/blender/3.6/scripts/addons/myaddon
+
+config/Code/*
+!config/Code/User
+config/Code/User/*
+!config/Code/User/settings.json
+
+config/fish
+
+config/gtk-3.0

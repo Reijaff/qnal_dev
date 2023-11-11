@@ -1,30 +1,74 @@
 {
-  description = "Python DevShell";
-
   inputs = {
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    flake-utils.inputs.nixpkgs.follows = "nixpkgs";
+    # flake-utils.url = "github:numtide/flake-utils";
+    # flake-utils.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, flake-utils }:
+
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        # nixpkgs.config.allowUnfree = true;
+        # nixpkgs.config.allowUnfree = true;
+        # pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+            config = {
+              # CUDA and other "friends" contain unfree licenses. To install them, you need this line:
+              allowUnfree = true;
+            };
+            inherit system;
+        };
 
-        blender = pkgs.blender.withPackages (ps: with ps; [ 
-          bpycv 
-          tqdm 
+
+        v1 = {
+          name = "MACHIN3tools";
+          src = builtins.fetchGit {
+            url = "https://github.com/machin3io/MACHIN3tools";
+            rev = "db0590bc624407d07d5c0f08ced2872c04c49d4c";
+          };
+        };
+
+        initScript = pkgs.writeScript "run.sh" ''
+          # echo Reinstalling blender plugins ...
+
+          echo Installing ${v1.name}
+          rm -rf $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}/
+          mkdir -p $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}
+          cp -r ${v1.src}/* $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}
+          chmod 755 -R $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}
+
+
+          echo Starting tts server ... 
+          # python tts_server.py &
+
+          bash
+
+          # trap 'pkill -f tts_server.py && echo "Exiting the shell"' EXIT
+          trap 'rm -rf config/Code/Workspaces/*' EXIT
+        '';
+
+
+        blender = nixpkgs.legacyPackages.${system}.blender.withPackages (ps:
+          with ps; [
+            bpycv
+            tqdm
+            debugpy
+            requests
+            flask
+
           ]);
+        
       in {
         devShells = {
           default = (pkgs.buildFHSEnv rec {
             name = "qnal-zone";
             profile = (''
               export PATH=$PATH:${blender.outPath}/bin
-            ''
-            );
+              export XDG_CONFIG_HOME=$PWD/config
+            '');
+
             targetPkgs = pkgs:
               with pkgs; [
                 blender
@@ -80,37 +124,29 @@
                       checkInputs = [ ];
                       nativeBuildInputs = [ ];
                       propagatedBuildInputs = [ ];
-                    }
+                    })
 
-                    )
 
                     # ansible 
                     # jmespath 
                   ]))
 
                 (vscode-with-extensions.override {
-                  vscode = vscodium;
+                  # vscode = vscodium;
                   vscodeExtensions = with vscode-extensions;
                     [
                       vscodevim.vim
                       ms-python.python
-                      # ms-python.autopep8
-                      # JacquesLucke.blender-development
-                      # ms-azuretools.vscode-docker
-                      # ms-vscode-remote.remote-ssh
+                      ms-vscode.cpptools
                     ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
                       name = "blender-development";
                       publisher = "JacquesLucke";
                       version = "0.0.18";
                       sha256 =
                         "sha256-C/ytfJnjTHwkwHXEYah4FGKNl1IKWd2wCGFSPjlo13s=";
+
                     }
-                    # {
-                    # name = "autopep8";
-                    # publisher = "ms-python";
-                    # version = "2023.9.13101009";
-                    # sha256 = "sha256-4wzfkKha5olcDb03LsaIh6RKAJO7OLtpArogP04wRlw=";
-                    # }
+                    
                     ];
                 })
 
@@ -124,9 +160,7 @@
                 })
 
               ];
-            runScript = ''
-              bash script.sh
-            '';
+            runScript = initScript;
           }).env;
         };
       });
