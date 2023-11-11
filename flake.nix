@@ -45,8 +45,11 @@
 
           bash
 
-          # trap 'pkill -f tts_server.py && echo "Exiting the shell"' EXIT
-          trap 'rm -rf config/Code/Workspaces/*' EXIT
+          trap '
+            echo "Exiting the shell ... "
+            trap 'rm -rf config/Code/Workspaces/*' EXIT
+            pkill -f tts_server.py
+          ' EXIT
         '';
 
 
