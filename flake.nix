@@ -41,7 +41,7 @@
 
 
           echo Starting tts server ... 
-          # python tts_server.py &
+          python tts_server.py &
 
           bash
 
