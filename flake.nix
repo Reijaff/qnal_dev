@@ -28,17 +28,20 @@
             url = "https://github.com/machin3io/MACHIN3tools";
             rev = "db0590bc624407d07d5c0f08ced2872c04c49d4c";
           };
+          runtimeInstall = ''
+            echo Installing ${v1.name}
+            addon_path=$XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}/
+            rm -rf $addon_path
+            mkdir -p $addon_path
+            cp -r ${v1.src}/* $addon_path
+            chmod 755 -R $addon_path
+          '';
         };
 
         initScript = pkgs.writeScript "run.sh" ''
           # echo Reinstalling blender plugins ...
 
-          echo Installing ${v1.name}
-          rm -rf $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}/
-          mkdir -p $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}
-          cp -r ${v1.src}/* $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}
-          chmod 755 -R $XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}
-
+          ${v1.runtimeInstall}
 
           echo Starting tts server ... 
           python tts_server.py &
@@ -46,8 +49,8 @@
           bash
 
           trap '
-            echo "Exiting the shell ... "
-            trap 'rm -rf config/Code/Workspaces/*' EXIT
+            echo "Exiting the shell ... " 
+            rm -rf config/Code/Workspaces/* 
             pkill -f tts_server.py
           ' EXIT
         '';
