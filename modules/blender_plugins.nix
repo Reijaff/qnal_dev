@@ -1,7 +1,6 @@
 rec {
   version = "3.6";
-  runtimeInstallScript = src: name:
-  ''
+  runtimeInstallScript = src: name: ''
     echo Installing ${name}
     addon_path=$XDG_CONFIG_HOME/blender/${version}/scripts/addons/${name}/
     rm -rf $addon_path
@@ -27,7 +26,67 @@ rec {
       owner = "Reijaff";
       src = builtins.fetchGit {
         url = "https://github.com/${owner}/${repo}";
-        rev = "3e5776e93f9dc5aa16719520d98377046cd9f73d";
+        rev = "c699829e6da3983acb7366bd200a9550fbeef60a";
+      };
+      ri = runtimeInstallScript src repo;
+    }
+
+    rec {
+      repo = "marking_of_highlights";
+      owner = "Reijaff";
+      src = builtins.fetchGit {
+        url = "https://github.com/${owner}/${repo}";
+        rev = "7e0e2b229c9886fe3f5beafb04cbf0f284e75ab5";
+      };
+      ri = runtimeInstallScript src repo;
+    }
+
+    rec {
+      repo = "bake_audio_frequencies";
+      owner = "Reijaff";
+      src = builtins.fetchGit {
+        url = "https://github.com/${owner}/${repo}";
+        rev = "f8984f80f33e250f11a603683ad415ac7679ecd4";
+      };
+      ri = runtimeInstallScript src repo;
+    }
+
+    rec {
+      repo = "combine_edits";
+      owner = "Reijaff";
+      src = builtins.fetchGit {
+        url = "https://github.com/${owner}/${repo}";
+        rev = "a114363629a2fb9190db50eb3895f9a82e93dd43";
+      };
+      ri = runtimeInstallScript src repo;
+    }
+
+    rec {
+      repo = "add_scene_with_sound";
+      owner = "Reijaff";
+      src = builtins.fetchGit {
+        url = "https://github.com/${owner}/${repo}";
+        rev = "2d534ae82af0f3a4b836b58ff7805756709b9445";
+      };
+      ri = runtimeInstallScript src repo;
+    }
+
+    rec {
+      repo = "plane_quad_mask";
+      owner = "Reijaff";
+      src = builtins.fetchGit {
+        url = "https://github.com/${owner}/${repo}";
+        rev = "7bcea50f0b4ba785636a2bfa2a5902068f5beeba";
+      };
+      ri = runtimeInstallScript src repo;
+    }
+
+    rec {
+      repo = "tts_client";
+      owner = "Reijaff";
+      src = builtins.fetchGit {
+        url = "https://github.com/${owner}/${repo}";
+        rev = "46a771210ac6cb658a440d202b55f8f011df420b";
       };
       ri = runtimeInstallScript src repo;
     }

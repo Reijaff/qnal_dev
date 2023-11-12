@@ -1,42 +1,18 @@
 {
   inputs = {
-
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # flake-utils.url = "github:numtide/flake-utils";
-    # flake-utils.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, flake-utils }:
 
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # nixpkgs.config.allowUnfree = true;
-        # nixpkgs.config.allowUnfree = true;
-        # pkgs = nixpkgs.legacyPackages.${system};
         pkgs = import nixpkgs {
           config = {
-            # CUDA and other "friends" contain unfree licenses. To install them, you need this line:
             allowUnfree = true;
           };
           inherit system;
         };
-
-        # v1 = {
-        # name = "MACHIN3tools";
-        # src = builtins.fetchGit {
-        # url = "https://github.com/machin3io/MACHIN3tools";
-        # rev = "db0590bc624407d07d5c0f08ced2872c04c49d4c";
-        # };
-        # runtimeInstall = ''
-        # echo Installing ${v1.name}
-        # addon_path=$XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}/
-        # rm -rf $addon_path
-        # mkdir -p $addon_path
-        # cp -r ${v1.src}/* $addon_path
-        # chmod 755 -R $addon_path
-        # '';
-        # };
-        # bp = import modules/blender_plugins.nix;
 
         initScript = pkgs.writeScript "run.sh" ''
           # echo Reinstalling blender plugins ...
@@ -146,7 +122,6 @@
                       version = "0.0.18";
                       sha256 =
                         "sha256-C/ytfJnjTHwkwHXEYah4FGKNl1IKWd2wCGFSPjlo13s=";
-
                     }
 
                     ];
