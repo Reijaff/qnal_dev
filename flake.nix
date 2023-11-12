@@ -14,34 +14,35 @@
         # nixpkgs.config.allowUnfree = true;
         # pkgs = nixpkgs.legacyPackages.${system};
         pkgs = import nixpkgs {
-            config = {
-              # CUDA and other "friends" contain unfree licenses. To install them, you need this line:
-              allowUnfree = true;
-            };
-            inherit system;
-        };
-
-
-        v1 = {
-          name = "MACHIN3tools";
-          src = builtins.fetchGit {
-            url = "https://github.com/machin3io/MACHIN3tools";
-            rev = "db0590bc624407d07d5c0f08ced2872c04c49d4c";
+          config = {
+            # CUDA and other "friends" contain unfree licenses. To install them, you need this line:
+            allowUnfree = true;
           };
-          runtimeInstall = ''
-            echo Installing ${v1.name}
-            addon_path=$XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}/
-            rm -rf $addon_path
-            mkdir -p $addon_path
-            cp -r ${v1.src}/* $addon_path
-            chmod 755 -R $addon_path
-          '';
+          inherit system;
         };
+
+        # v1 = {
+        # name = "MACHIN3tools";
+        # src = builtins.fetchGit {
+        # url = "https://github.com/machin3io/MACHIN3tools";
+        # rev = "db0590bc624407d07d5c0f08ced2872c04c49d4c";
+        # };
+        # runtimeInstall = ''
+        # echo Installing ${v1.name}
+        # addon_path=$XDG_CONFIG_HOME/blender/3.6/scripts/addons/${v1.name}/
+        # rm -rf $addon_path
+        # mkdir -p $addon_path
+        # cp -r ${v1.src}/* $addon_path
+        # chmod 755 -R $addon_path
+        # '';
+        # };
+        # bp = import modules/blender_plugins.nix;
 
         initScript = pkgs.writeScript "run.sh" ''
           # echo Reinstalling blender plugins ...
 
-          ${v1.runtimeInstall}
+          ${builtins.foldl' (a: b: a + b.ri) ""
+          (import ./modules/blender_plugins.nix).plugins}
 
           echo Starting tts server ... 
           python tts_server.py &
@@ -55,7 +56,6 @@
           ' EXIT
         '';
 
-
         blender = nixpkgs.legacyPackages.${system}.blender.withPackages (ps:
           with ps; [
             bpycv
@@ -65,7 +65,7 @@
             flask
 
           ]);
-        
+
       in {
         devShells = {
           default = (pkgs.buildFHSEnv rec {
@@ -132,7 +132,6 @@
                       propagatedBuildInputs = [ ];
                     })
 
-
                     # ansible 
                     # jmespath 
                   ]))
@@ -140,11 +139,8 @@
                 (vscode-with-extensions.override {
                   # vscode = vscodium;
                   vscodeExtensions = with vscode-extensions;
-                    [
-                      vscodevim.vim
-                      ms-python.python
-                      ms-vscode.cpptools
-                    ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
+                    [ vscodevim.vim ms-python.python ms-vscode.cpptools ]
+                    ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
                       name = "blender-development";
                       publisher = "JacquesLucke";
                       version = "0.0.18";
@@ -152,7 +148,7 @@
                         "sha256-C/ytfJnjTHwkwHXEYah4FGKNl1IKWd2wCGFSPjlo13s=";
 
                     }
-                    
+
                     ];
                 })
 
