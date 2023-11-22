@@ -9,3 +9,6 @@ config/Code/*
 !config/Code/User
 config/Code/User/*
 !config/Code/User/settings.json
+
+myprojects/*
+!myprojects/untitled.blend

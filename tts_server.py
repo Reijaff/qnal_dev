@@ -1,9 +1,11 @@
 import time
+import json
 import wave
 import io
 import numpy as np
 from scipy.io.wavfile import write
 from flask import Flask, render_template, render_template_string, request, send_file
+# import whisper_timestamped as whisper
 
 app = Flask(__name__)
 
@@ -30,6 +32,7 @@ sampling_rate = tts.get_sampling_rate()
 def balacoon_tts():
     # global speaker, tts
     text = request.headers.get("text") or request.values.get("text", "")
+    isTranscription = request.headers.get("transcription") or request.values.get("transcription", "")
 
     print(f" > Model input: {text}")
     out = io.BytesIO()
@@ -38,6 +41,13 @@ def balacoon_tts():
     with wave.open("/tmp/tmp.wav", "w") as fp:
         fp.setparams((1, 2, tts.get_sampling_rate(), len(samples), "NONE", "NONE"))
         fp.writeframes(samples)
+    
+
+    # audio = whisper.load_audio("AUDIO.wav")
+    # audio = whisper.load_audio("/tmp/tmp.wav")
+    # model = whisper.load_model("tiny", device="cpu")
+    # result = whisper.transcribe(model, audio, language="en")
+    # print(json.dumps(result, indent = 2, ensure_ascii = False))
 
     return send_file("/tmp/tmp.wav", mimetype="audio/wav")
 

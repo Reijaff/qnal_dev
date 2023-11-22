@@ -46,7 +46,7 @@ rec {
       owner = "Reijaff";
       src = builtins.fetchGit {
         url = "https://github.com/${owner}/${repo}";
-        rev = "f8984f80f33e250f11a603683ad415ac7679ecd4";
+        rev = "749293105b1ddb202bd66c1283529d9a1c96c99f";
       };
       ri = runtimeInstallScript src repo;
     }
@@ -86,7 +86,7 @@ rec {
       owner = "Reijaff";
       src = builtins.fetchGit {
         url = "https://github.com/${owner}/${repo}";
-        rev = "46a771210ac6cb658a440d202b55f8f011df420b";
+        rev = "e3736592b71f7971aca33d9bed9060547975a44c";
       };
       ri = runtimeInstallScript src repo;
     }

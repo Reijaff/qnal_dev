@@ -40,6 +40,19 @@
             requests
             flask
 
+
+            dtw-python
+            openai-whisper
+            (buildPythonPackage rec {
+              pname = "whisper-timestamped";
+              version = "";
+              src = fetchGit {
+                url = "https://github.com/linto-ai/whisper-timestamped";
+                rev = "a0b86f283336256156f552842d5a99c5101a157a";
+              };
+              doCheck = false;
+            })
+
           ]);
 
       in {
@@ -53,6 +66,7 @@
 
             targetPkgs = pkgs:
               with pkgs; [
+                ffmpeg
                 blender
 
                 (python3.withPackages (p:
@@ -67,7 +81,21 @@
                     tqdm
                     pyyaml
 
-                    # fake-bpy-module-latest
+                    # 
+                    huggingface-hub
+
+                    # dtw-python
+                    # openai-whisper
+                    # (buildPythonPackage rec {
+                      # pname = "whisper-timestamped";
+                      # version = "";
+                      # src = fetchGit {
+                        # url = "https://github.com/linto-ai/whisper-timestamped";
+                        # rev = "a0b86f283336256156f552842d5a99c5101a157a";
+                      # };
+                      # doCheck = false;
+                    # })
+                    #
 
                     (buildPythonPackage rec {
                       pname = "fake-bpy-module-latest";
@@ -80,16 +108,16 @@
                       doCheck = false;
                     })
 
-                    (buildPythonPackage rec {
-                      pname = "huggingface_hub";
-                      version = "0.18.0";
-                      src = fetchPypi {
-                        inherit pname version;
-                        sha256 =
-                          "sha256-EO2hK5wc+oALS3wJazrOiENzTD8o1p0cJDdD+316LoE=";
-                      };
-                      doCheck = false;
-                    })
+                    # (buildPythonPackage rec {
+                      # pname = "huggingface_hub";
+                      # version = "0.18.0";
+                      # src = fetchPypi {
+                        # inherit pname version;
+                        # sha256 =
+                          # "sha256-EO2hK5wc+oALS3wJazrOiENzTD8o1p0cJDdD+316LoE=";
+                      # };
+                      # doCheck = false;
+                    # })
 
                     (buildPythonPackage rec {
                       pname = "balacoon-tts";
