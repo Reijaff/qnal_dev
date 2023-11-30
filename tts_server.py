@@ -2,19 +2,25 @@ import time
 import json
 import wave
 import io
+import base64
 import numpy as np
 from scipy.io.wavfile import write
 from flask import Flask, render_template, render_template_string, request, send_file
-# import whisper_timestamped as whisper
+
+import whisper_timestamped as whisper
 
 app = Flask(__name__)
 
 from huggingface_hub import hf_hub_download
+
 # addon_path = hf_hub_download(repo_id="balacoon/tts", filename="en_us_hifi92_light_cpu.addon")
-addon_path = hf_hub_download(repo_id="balacoon/tts", filename="en_us_hifi_jets_cpu.addon")
+addon_path = hf_hub_download(
+    repo_id="balacoon/tts", filename="en_us_hifi_jets_cpu.addon"
+)
 
 
 from balacoon_tts import TTS
+
 # adjust the path to the addon based on the previous step
 tts = TTS(addon_path)
 # this will return a list of speakers that model supports.
@@ -27,28 +33,43 @@ speaker = supported_speakers[-1]
 sampling_rate = tts.get_sampling_rate()
 
 
-
 @app.route("/api/balacoon_tts", methods=["GET", "POST"])
 def balacoon_tts():
     # global speaker, tts
+    
     text = request.headers.get("text") or request.values.get("text", "")
-    isTranscription = request.headers.get("transcription") or request.values.get("transcription", "")
+    isTranscription = (
+        request.headers.get("transcription")
+        or request.values.get("transcription", "")
+        or False
+    )
+    tmp_file_name = "/tmp/tmp.wav"
 
     print(f" > Model input: {text}")
     out = io.BytesIO()
     samples = tts.synthesize(text, speaker)
 
-    with wave.open("/tmp/tmp.wav", "w") as fp:
+    with wave.open(tmp_file_name, "w") as fp:
         fp.setparams((1, 2, tts.get_sampling_rate(), len(samples), "NONE", "NONE"))
         fp.writeframes(samples)
-    
 
-    # audio = whisper.load_audio("AUDIO.wav")
-    # audio = whisper.load_audio("/tmp/tmp.wav")
-    # model = whisper.load_model("tiny", device="cpu")
-    # result = whisper.transcribe(model, audio, language="en")
-    # print(json.dumps(result, indent = 2, ensure_ascii = False))
+    transcription_data = None
+    print(isTranscription)
+    if isTranscription == "True":
+        audio = whisper.load_audio(tmp_file_name)
+        model = whisper.load_model("tiny", device="cpu")
+        transcription_data = whisper.transcribe(model, audio, language="en")
 
-    return send_file("/tmp/tmp.wav", mimetype="audio/wav")
+    encoded_string = None
+    with open(tmp_file_name, 'rb') as file:
+        encoded_string = base64.b64encode(file.read()).decode('utf-8')
+
+    ret_data = {
+        "audio": encoded_string ,
+        "transcription": transcription_data,
+    }
+    return ret_data
+
+
 
 app.run(port=5300)

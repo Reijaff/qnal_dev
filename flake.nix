@@ -14,6 +14,11 @@
           inherit system;
         };
 
+        # bforartists = builtins.fetchTarball{
+          # url = "https://github.com/Bforartists/Bforartists/releases/download/v4.0.1/Bforartists-4.0.1-Linux.tar.xz";
+          # sha256 = "1110c4389q3bxhrpzpskg25czb9aazbk93a8nnjrwna7c4nyg182";
+        # };
+
         initScript = pkgs.writeScript "run.sh" ''
           # echo Reinstalling blender plugins ...
 
@@ -41,17 +46,6 @@
             flask
 
 
-            dtw-python
-            openai-whisper
-            (buildPythonPackage rec {
-              pname = "whisper-timestamped";
-              version = "";
-              src = fetchGit {
-                url = "https://github.com/linto-ai/whisper-timestamped";
-                rev = "a0b86f283336256156f552842d5a99c5101a157a";
-              };
-              doCheck = false;
-            })
 
           ]);
 
@@ -80,22 +74,22 @@
                     filelock
                     tqdm
                     pyyaml
+                    pytaglib
+
+                    dtw-python
+                    openai-whisper
+                    (buildPythonPackage rec {
+                      pname = "whisper-timestamped";
+                      version = "";
+                      src = fetchGit {
+                        url = "https://github.com/linto-ai/whisper-timestamped";
+                        rev = "a0b86f283336256156f552842d5a99c5101a157a";
+                      };
+                      doCheck = false;
+                    })
 
                     # 
                     huggingface-hub
-
-                    # dtw-python
-                    # openai-whisper
-                    # (buildPythonPackage rec {
-                      # pname = "whisper-timestamped";
-                      # version = "";
-                      # src = fetchGit {
-                        # url = "https://github.com/linto-ai/whisper-timestamped";
-                        # rev = "a0b86f283336256156f552842d5a99c5101a157a";
-                      # };
-                      # doCheck = false;
-                    # })
-                    #
 
                     (buildPythonPackage rec {
                       pname = "fake-bpy-module-latest";
@@ -107,17 +101,6 @@
                       };
                       doCheck = false;
                     })
-
-                    # (buildPythonPackage rec {
-                      # pname = "huggingface_hub";
-                      # version = "0.18.0";
-                      # src = fetchPypi {
-                        # inherit pname version;
-                        # sha256 =
-                          # "sha256-EO2hK5wc+oALS3wJazrOiENzTD8o1p0cJDdD+316LoE=";
-                      # };
-                      # doCheck = false;
-                    # })
 
                     (buildPythonPackage rec {
                       pname = "balacoon-tts";
@@ -163,6 +146,27 @@
                   #(setq org-latex-compiler "lualatex")
                   #(setq org-preview-latex-default-process 'dvisvgm)
                 })
+
+                # # bforartists dependencies # no sound :(
+                # xorg.libX11
+                # xorg.libXxf86vm
+                # xorg.libXfixes
+                # xorg.libXi
+                # libxkbcommon
+                # xorg.libSM
+                # xorg.libICE
+                # libglvnd
+                # libz
+
+                # wayland
+                # libdecor
+                # libxcrypt-legacy
+                # #
+                
+                # # jackaudioSupport
+                # libsndfile
+                # libjack2
+
 
               ];
             runScript = initScript;

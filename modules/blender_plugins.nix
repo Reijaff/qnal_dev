@@ -1,8 +1,9 @@
 rec {
-  version = "3.6";
+
   runtimeInstallScript = src: name: ''
     echo Installing ${name}
-    addon_path=$XDG_CONFIG_HOME/blender/${version}/scripts/addons/${name}/
+
+    addon_path=$XDG_CONFIG_HOME/blender/3.6/scripts/addons/${name}/
     rm -rf $addon_path
     mkdir -p $addon_path
     cp -r ${src}/* $addon_path
@@ -86,7 +87,7 @@ rec {
       owner = "Reijaff";
       src = builtins.fetchGit {
         url = "https://github.com/${owner}/${repo}";
-        rev = "e3736592b71f7971aca33d9bed9060547975a44c";
+        rev = "b87b6811a1753af19b8f886163875524d2f0e7ec";
       };
       ri = runtimeInstallScript src repo;
     }
