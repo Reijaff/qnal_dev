@@ -1,8 +1,8 @@
 config/*
-config/blender/3.6/config/*
-!config/blender/3.6/config/userpref.blend
+config/blender/4.0/config/*
+!config/blender/4.0/config/userpref.blend
 
-config/blender/3.6/scripts/addons/*
+config/blender/4.0/scripts/addons/*
 #!config/blender/3.6/scripts/addons/myaddon
 
 config/Code/*

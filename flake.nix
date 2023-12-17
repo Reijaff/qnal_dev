@@ -62,6 +62,7 @@
               with pkgs; [
                 ffmpeg
                 blender
+                piper-tts
 
                 (python3.withPackages (p:
                   with p; [
@@ -70,11 +71,49 @@
                     scipy
                     ipython
 
+
                     requests
                     filelock
                     tqdm
                     pyyaml
                     pytaglib
+                    torchaudio
+                    omegaconf
+                    rich
+                    soundfile
+                    piper-phonemize
+                    tabulate
+                    # piper-tts
+                    # deepspeed
+
+                    (buildPythonPackage rec {
+                      pname = "deepspeed";
+                      version = "";
+                      src = fetchGit {
+                        url = "https://github.com/microsoft/DeepSpeed";
+                        rev = "4d866bd55a6b2b924987603b599c1f8f35911c4b";
+                      };
+                      doCheck = false;
+                    })
+                    py-cpuinfo
+                    psutil
+                    hjson
+                    pydantic
+                    librosa
+                    pandas
+                    matplotlib
+
+
+		                # resemble-enhance
+                    (buildPythonPackage rec {
+                      pname = "resemble-enhance";
+                      version = "0.0.1";
+                      src = fetchGit {
+                        url = "https://github.com/resemble-ai/resemble-enhance";
+                        rev = "b4bd8d693a8353617bba7d0cd0fb2e8c4e586527";
+                      };
+                      doCheck = false;
+                    })
 
                     dtw-python
                     openai-whisper

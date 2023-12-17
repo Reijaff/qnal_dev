@@ -3,7 +3,7 @@ rec {
   runtimeInstallScript = src: name: ''
     echo Installing ${name}
 
-    addon_path=$XDG_CONFIG_HOME/blender/3.6/scripts/addons/${name}/
+    addon_path=$XDG_CONFIG_HOME/blender/4.0/scripts/addons/${name}/
     rm -rf $addon_path
     mkdir -p $addon_path
     cp -r ${src}/* $addon_path
