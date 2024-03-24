@@ -5,7 +5,7 @@
     "workbench.startupEditor": "none",
     "blender.executables": [
         {
-            "path": "/usr/bin/blender-wrapped",
+            "path": "bforartists",
             "name": "",
             "isDebug": false
         }

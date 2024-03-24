@@ -1,9 +1,9 @@
 rec {
-
   runtimeInstallScript = src: name: ''
     echo Installing ${name}
 
-    addon_path=$XDG_CONFIG_HOME/blender/4.0/scripts/addons/${name}/
+    # addon_path=$XDG_CONFIG_HOME/blender/4.0/scripts/addons/${name}/
+    addon_path=$XDG_CONFIG_HOME/bforartists/4.1/scripts/addons/${name}/
     rm -rf $addon_path
     mkdir -p $addon_path
     cp -r ${src}/* $addon_path
@@ -11,16 +11,15 @@ rec {
   '';
 
   plugins = [
-
-    rec {
-      repo = "MACHIN3tools";
-      owner = "machin3io";
-      src = builtins.fetchGit {
-        url = "https://github.com/${owner}/${repo}";
-        rev = "db0590bc624407d07d5c0f08ced2872c04c49d4c";
-      };
-      ri = runtimeInstallScript src repo;
-    }
+    # rec {
+    # repo = "MACHIN3tools";
+    # owner = "machin3io";
+    # src = builtins.fetchGit {
+    # url = "https://github.com/${owner}/${repo}";
+    # rev = "";
+    # };
+    # ri = runtimeInstallScript src repo;
+    # }
 
     rec {
       repo = "import_latex_as_curve";
@@ -47,7 +46,7 @@ rec {
       owner = "Reijaff";
       src = builtins.fetchGit {
         url = "https://github.com/${owner}/${repo}";
-        rev = "749293105b1ddb202bd66c1283529d9a1c96c99f";
+        rev = "5cb875600a0533c517307421df58a8c7883e7f75";
       };
       ri = runtimeInstallScript src repo;
     }
@@ -91,7 +90,5 @@ rec {
       };
       ri = runtimeInstallScript src repo;
     }
-
   ];
-
 }

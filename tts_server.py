@@ -82,7 +82,7 @@ def balacoon_tts():
         or request.values.get("transcription", "")
         or False
     )
-    isEnhance = False
+    isEnhance = False 
 
 
     tmp_file_name = "/tmp/tmp.wav"

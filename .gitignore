@@ -1,17 +1,7 @@
 config/*
-!config/blender
+myprojects/*
 
-config/blender/4.0/config/*
-!config/blender/4.0/config/userpref.blend
-
-
-config/blender/4.0/scripts/addons/*
-#!config/blender/3.6/scripts/addons/myaddon
-
-config/Code/*
-!config/Code/User
-config/Code/User/*
+!config/bforartists/4.1/config/userpref.blend
 !config/Code/User/settings.json
 
-myprojects/*
 !myprojects/untitled.blend
